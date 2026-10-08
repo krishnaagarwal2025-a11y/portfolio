@@ -32,7 +32,6 @@ export const commands: Record<string, CommandFn> = {
     "  git            View recent Git commit log",
     "  resume         View curriculum vitae & PDF document",
     "  contact        Communication coordinates & repository link",
-    "  inbox, admin   Access private message inbox portal (/inbox)",
     "  krishna        Inspect KRISHNA.EXE animated companion process",
     "  emote <name>   Trigger character emote (e.g. emote chai, emote typing)",
     "  chai, coffee   Take a refreshment break",
@@ -262,25 +261,8 @@ export const commands: Record<string, CommandFn> = {
     `  Resume:      ${profile.contact.resumeFileName} (available in viewer)`,
     `  Morrow Repo: ${profile.contact.repo}`,
     `  Location:    ${profile.location}`,
-    "Type 'open contact' to dispatch a direct message.",
+    "Type 'open contact' or 'resume' to view reachout coordinates or CV.",
   ],
-
-  inbox: (ctx) => {
-    ctx.setKrishnaEmote?.("reading", 3000, "Accessing private mailbox...");
-    if (typeof window !== "undefined") {
-      setTimeout(() => {
-        window.open("/inbox", "_blank");
-      }, 500);
-    }
-    return [
-      "Accessing KrishnaOS Private Dispatch Mailbox...",
-      "Opening /inbox in secure administrator session.",
-      "Clearance: Administrator (PIN: krishna1337)",
-    ];
-  },
-
-  mailbox: (ctx, args) => commands.inbox(ctx, args),
-  admin: (ctx, args) => commands.inbox(ctx, args),
 
   open: (ctx, args) => {
     const target = (args[0] || "").toLowerCase();
