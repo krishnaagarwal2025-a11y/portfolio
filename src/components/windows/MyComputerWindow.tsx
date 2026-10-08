@@ -181,9 +181,6 @@ export default function MyComputerWindow({ onOpenApp }: { onOpenApp: (id: string
               <button className="retro-action-btn" onClick={() => onOpenApp("projects")}>
                 View Projects
               </button>
-              <button className="retro-action-btn" onClick={() => onOpenApp("security")}>
-                Security Lab
-              </button>
               <button className="retro-action-btn" onClick={() => onOpenApp("skills")}>
                 Skills Inventory
               </button>

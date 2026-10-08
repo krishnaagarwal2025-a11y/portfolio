@@ -15,12 +15,10 @@ import CRTOverlay from "../effects/CRTOverlay";
 import MyComputerWindow from "../windows/MyComputerWindow";
 import ProjectExplorer from "../projects/ProjectExplorer";
 import ProjectDetail from "../projects/ProjectDetail";
-import SecurityLabWindow from "../windows/SecurityLabWindow";
 import SkillsWindow from "../windows/SkillsWindow";
 import GitLogWindow from "../windows/GitLogWindow";
 import ResumeWindow from "../windows/ResumeWindow";
 import ContactWindow from "../windows/ContactWindow";
-import SysInfoWindow from "../windows/SysInfoWindow";
 import Terminal from "../terminal/Terminal";
 
 export default function Desktop() {
@@ -87,13 +85,6 @@ export default function Desktop() {
         node: <ProjectExplorer onOpenProjectWindow={openApp} />,
       },
       {
-        id: "security",
-        title: "Security Lab [Ethical Hacking / VirtualBox / Kali]",
-        icon: "shield-radar",
-        width: 680,
-        node: <SecurityLabWindow />,
-      },
-      {
         id: "skills",
         title: "System Hardware & Skills Inventory (skills.sys)",
         icon: "skills-chip",
@@ -127,13 +118,6 @@ export default function Desktop() {
         icon: "mail-envelope",
         width: 540,
         node: <ContactWindow />,
-      },
-      {
-        id: "sysinfo",
-        title: "System Properties",
-        icon: "info-dialog",
-        width: 520,
-        node: <SysInfoWindow />,
       },
     ];
 

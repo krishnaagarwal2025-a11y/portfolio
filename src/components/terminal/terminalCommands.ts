@@ -27,13 +27,13 @@ export const commands: Record<string, CommandFn> = {
     "  education      University, degree, CGPA, and coursework",
     "  hackathons     Hackathons & academic competitions",
     "  git            View recent Git commit log",
-    "  resume         View curriculum vitae & [TODO: Add Resume PDF]",
+    "  resume         View curriculum vitae & PDF document",
     "  contact        Communication coordinates & repository link",
     "  uptime         Display active session uptime",
     "  date           Display current system time and date",
     "  matrix         Toggle Matrix digital rain visualizer",
     "  sudo <cmd>     Execute command as superuser",
-    "  open <app>     Open graphical window (e.g. open morrow, open security)",
+    "  open <app>     Open graphical window (e.g. open morrow, open projects)",
     "  clear          Clear the terminal screen",
   ],
 
@@ -145,14 +145,13 @@ export const commands: Record<string, CommandFn> = {
     ];
   },
 
-  security: (ctx) => [
-    "Cybersecurity Exploration & Security Lab:",
+  security: () => [
+    "Cybersecurity Background & Exploration:",
     "  Primary Focus: Ethical hacking, network security, web app auditing, Linux internals",
     "  Toolbox: Kali Linux, VirtualBox, Burp Suite, Nmap, arp-scan, httprobe",
     "  Lab Work: Isolated NAT network, Kali Linux attacking Kioptrix VM challenge",
     "  Coursework: EC-Council Ethical Hacking Course",
     "  STATUS: IN PROGRESS (Coursework ongoing — no fake cert claimed)",
-    "Type 'open security' to launch GUI workbench.",
   ],
 
   skills: () => {
@@ -215,15 +214,12 @@ export const commands: Record<string, CommandFn> = {
       wearable: "p-wearable",
       auraguard: "p-auraguard",
       network: "p-network-sim",
-      security: "security",
       skills: "skills",
       terminal: "terminal",
       git: "git",
       log: "git",
       resume: "resume",
       contact: "contact",
-      sysinfo: "sysinfo",
-      system: "sysinfo",
     };
 
     const appId = map[target];
@@ -233,7 +229,7 @@ export const commands: Record<string, CommandFn> = {
     }
     return [
       `Unknown application: '${target}'`,
-      `Valid targets: mycomputer, projects, morrow, wearable, auraguard, network, security, skills, git, resume, contact, sysinfo`,
+      `Valid targets: mycomputer, projects, morrow, wearable, auraguard, network, skills, git, resume, contact`,
     ];
   },
 
@@ -255,8 +251,8 @@ export const commands: Record<string, CommandFn> = {
   date: () => [new Date().toString()],
 
   ls: () => [
-    "about.txt      projects/      security_lab/   skills.sys",
-    "git_log.txt    resume.pdf     contact.exe     bios_diag.log",
+    "about.txt      projects/      skills.sys     git_log.txt",
+    "resume.pdf     contact.exe    bios_diag.log",
   ],
 
   cat: (ctx, args) => {
