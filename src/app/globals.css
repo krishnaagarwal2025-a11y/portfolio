@@ -1930,6 +1930,34 @@ button {
   background: var(--win-gray);
   border: 1px inset #d1d5db;
   padding: 4px 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.resume-pdf-frame-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  background: #333333;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+}
+
+.resume-pdf-iframe {
+  width: 100%;
+  flex: 1;
+  border: none;
+  background: #ffffff;
+}
+
+.pdf-fallback-note {
+  background: #f3f4f6;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-top: 1px solid #d1d5db;
+  color: #374151;
 }
 
 .toolbar-left {

@@ -144,7 +144,17 @@ export default function MyComputerWindow({ onOpenApp }: { onOpenApp: (id: string
                 <span className="stat-number">{profile.problemSolving.count}</span>
                 <div className="stat-desc">
                   <b>LeetCode Problems Solved</b>
-                  <p>Focused on Data Structures, Algorithms, and Core Problem Solving fundamentals.</p>
+                  <p>
+                    Focused on Data Structures, Algorithms, and Core Problem Solving fundamentals. Profile:{" "}
+                    <a
+                      href={profile.problemSolving.profileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="link-highlight"
+                    >
+                      {profile.problemSolving.profileText} ↗
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -176,6 +186,9 @@ export default function MyComputerWindow({ onOpenApp }: { onOpenApp: (id: string
               </button>
               <button className="retro-action-btn" onClick={() => onOpenApp("skills")}>
                 Skills Inventory
+              </button>
+              <button className="retro-action-btn btn-primary" onClick={() => onOpenApp("resume")}>
+                Resume PDF ↗
               </button>
             </div>
           </div>

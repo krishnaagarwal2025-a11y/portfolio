@@ -31,17 +31,67 @@ export default function ContactWindow() {
         <div className="contact-rows-list">
           <div className="contact-row">
             <span className="channel-name">EMAIL:</span>
-            <span className="channel-val todo-val">{profile.contact.email}</span>
-          </div>
-
-          <div className="contact-row">
-            <span className="channel-name">GITHUB:</span>
-            <span className="channel-val todo-val">{profile.contact.github}</span>
+            <span className="channel-val">
+              <a href={`mailto:${profile.contact.email}`} className="link-highlight">
+                {profile.contact.email}
+              </a>
+            </span>
           </div>
 
           <div className="contact-row">
             <span className="channel-name">LINKEDIN:</span>
-            <span className="channel-val todo-val">{profile.contact.linkedin}</span>
+            <span className="channel-val">
+              <a
+                href={profile.contact.linkedinUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="link-highlight"
+              >
+                {profile.contact.linkedin} ↗
+              </a>
+            </span>
+          </div>
+
+          <div className="contact-row">
+            <span className="channel-name">GITHUB:</span>
+            <span className="channel-val">
+              <a
+                href={profile.contact.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="link-highlight"
+              >
+                {profile.contact.github} ↗
+              </a>
+            </span>
+          </div>
+
+          <div className="contact-row">
+            <span className="channel-name">LEETCODE:</span>
+            <span className="channel-val">
+              <a
+                href={profile.contact.leetcodeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="link-highlight"
+              >
+                {profile.contact.leetcode} ↗
+              </a>
+            </span>
+          </div>
+
+          <div className="contact-row">
+            <span className="channel-name">RESUME PDF:</span>
+            <span className="channel-val">
+              <a
+                href={profile.contact.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="link-highlight text-ok"
+              >
+                {profile.contact.resumeFileName} (View / Download) ↗
+              </a>
+            </span>
           </div>
 
           <div className="contact-row">
@@ -53,7 +103,7 @@ export default function ContactWindow() {
                 rel="noreferrer"
                 className="link-highlight"
               >
-                {profile.contact.repo}
+                {profile.contact.repo} ↗
               </a>
             </span>
           </div>
@@ -67,13 +117,17 @@ export default function ContactWindow() {
 
       {/* Send a Dispatch Message Form */}
       <div className="retro-fieldset">
-        <legend>Dispatch a Message (KrishnaOS Mailer)</legend>
+        <legend>Dispatch a Direct Message (KrishnaOS Mailer)</legend>
         {submitted ? (
           <div className="dispatch-success-box">
             <h4>✓ Message Queued in Virtual Spooler</h4>
             <p>
               Thank you, <b>{formName || "Visitor"}</b>. Your message was processed by the KrishnaOS spool daemon.
-              (Note: For immediate direct contact, please reach out via verified social / email channels when available).
+              You can also reach Krishna directly at{" "}
+              <a href={`mailto:${profile.contact.email}`} className="link-highlight">
+                {profile.contact.email}
+              </a>
+              .
             </p>
             <button
               className="retro-action-btn"

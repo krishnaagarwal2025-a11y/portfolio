@@ -188,14 +188,16 @@ export const commands: Record<string, CommandFn> = {
 
   resume: (ctx) => {
     ctx.openApp("resume");
-    return ["Opening resume viewer...", "Notice: [TODO: Add Resume PDF]"];
+    return [`Opening resume viewer (${profile.contact.resumeFileName})...`];
   },
 
   contact: (ctx) => [
     "Krishna Agarwal Contact Coordinates:",
     `  Email:       ${profile.contact.email}`,
-    `  GitHub:      ${profile.contact.github}`,
-    `  LinkedIn:    ${profile.contact.linkedin}`,
+    `  LinkedIn:    ${profile.contact.linkedin} (${profile.contact.linkedinUrl})`,
+    `  GitHub:      ${profile.contact.github} (${profile.contact.githubUrl})`,
+    `  LeetCode:    ${profile.contact.leetcode} (${profile.contact.leetcodeUrl})`,
+    `  Resume:      ${profile.contact.resumeFileName} (available in viewer)`,
     `  Morrow Repo: ${profile.contact.repo}`,
     `  Location:    ${profile.location}`,
     "Type 'open contact' to dispatch a direct message.",
@@ -260,7 +262,13 @@ export const commands: Record<string, CommandFn> = {
   cat: (ctx, args) => {
     const file = (args[0] || "").toLowerCase();
     if (file === "about.txt") return commands.whoami(ctx, args);
-    if (file === "resume.pdf") return ["[TODO: Add Resume PDF] (File pending upload)"];
+    if (file === "resume.pdf" || file === "krishna_cyber.pdf") {
+      return [
+        `[PDF DOCUMENT: ${profile.contact.resumeFileName}]`,
+        `Available in /public/${profile.contact.resumeFileName}`,
+        `Use command 'open resume' or 'resume' to launch the graphic PDF document viewer.`,
+      ];
+    }
     if (file === "contact.exe") return commands.contact(ctx, args);
     if (file === "skills.sys") return commands.skills(ctx, args);
     if (file === "bios_diag.log") return ["BIOS CHECK OK. MEMORY TEST OK. DEVELOPER MODE ENABLED."];

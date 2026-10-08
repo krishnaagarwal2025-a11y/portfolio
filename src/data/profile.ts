@@ -32,6 +32,8 @@ export const profile = {
     leetcode: "200+ LeetCode problems solved",
     count: "200+",
     areas: ["Data Structures", "Algorithms", "Problem Solving"],
+    profileText: "leetcode.krishna07.cv",
+    profileUrl: "https://leetcode.krishna07.cv",
   },
 
   academicAreas: {
@@ -103,11 +105,16 @@ export const profile = {
   ],
 
   contact: {
-    email: "[TODO: Add Email]",
-    github: "[TODO: Add GitHub]",
-    linkedin: "[TODO: Add LinkedIn]",
+    email: "agarwalkrishna1204@gmail.com",
+    github: "github.krishna07.cv",
+    githubUrl: "https://github.krishna07.cv",
+    linkedin: "linkedin.krishna07.cv",
+    linkedinUrl: "https://linkedin.krishna07.cv",
+    leetcode: "leetcode.krishna07.cv",
+    leetcodeUrl: "https://leetcode.krishna07.cv",
     repo: "https://github.com/krishnaagarwal2025-a11y/Memora.git",
-    resumeUrl: "", // [TODO: Add Resume PDF]
+    resumeUrl: "/krishna_cyber.pdf",
+    resumeFileName: "krishna_cyber.pdf",
   },
 };
 
