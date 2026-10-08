@@ -19,6 +19,7 @@ import SkillsWindow from "../windows/SkillsWindow";
 import GitLogWindow from "../windows/GitLogWindow";
 import ResumeWindow from "../windows/ResumeWindow";
 import ContactWindow from "../windows/ContactWindow";
+import ImageViewerWindow from "../windows/ImageViewerWindow";
 import Terminal from "../terminal/Terminal";
 
 import { KrishnaProvider, useKrishnaExe, KrishnaExe } from "../krishna-exe";
@@ -122,6 +123,8 @@ function DesktopInner() {
         requestEmote("thinking", 2800, "Exploring systems & projects");
       } else if (id === "contact") {
         requestEmote("chai", 3000, "Let's connect over chai!");
+      } else if (id === "portrait-viewer") {
+        requestEmote("happy", 3000, "Viewing portfolio.png");
       } else if (id === "skills" || id === "git") {
         requestEmote("thinking", 2500);
       }
@@ -185,6 +188,13 @@ function DesktopInner() {
         icon: "mail-envelope",
         width: 540,
         node: <ContactWindow />,
+      },
+      {
+        id: "portrait-viewer",
+        title: "Windows Picture Viewer - portfolio.png",
+        icon: "image",
+        width: 580,
+        node: <ImageViewerWindow />,
       },
     ];
 

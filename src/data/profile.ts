@@ -13,6 +13,7 @@ export const profile = {
   cgpaDisplay: "9.40",
   status: "OPEN TO INTERNSHIPS",
   careerGoal: "Secure an internship before the end of 2026",
+  portraitUrl: "/emote/portfolio.png",
   tagline: "Computer Science student at VIT Vellore interested in cybersecurity, software development, networking, AI systems, embedded systems, and building things that actually work.",
   
   academicInterests: [

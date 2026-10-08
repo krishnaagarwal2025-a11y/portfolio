@@ -697,10 +697,139 @@ button {
   border-bottom: 2px solid var(--win-light);
 }
 
-.system-banner h3 {
-  margin: 0 0 4px 0;
+.profile-with-portrait {
+  align-items: stretch;
+  gap: 16px;
+  padding: 12px;
+}
+
+.portrait-card {
+  flex: 0 0 136px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-light);
+  border-left: 2px solid var(--win-light);
+  border-right: 2px solid var(--win-dark);
+  border-bottom: 2px solid var(--win-dark);
+  padding: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.portrait-card:hover {
+  background: #e2dfd7;
+  outline: 1px dotted var(--win-black);
+}
+
+.portrait-frame {
+  width: 120px;
+  height: 120px;
+  background: #000000;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.portrait-caption {
+  width: 100%;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 11px;
+  font-family: "Space Mono", monospace;
+  color: #374151;
+}
+
+.caption-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.portrait-zoom-btn {
+  background: var(--win-gray);
+  border-top: 1px solid var(--win-light);
+  border-left: 1px solid var(--win-light);
+  border-right: 1px solid var(--win-black);
+  border-bottom: 1px solid var(--win-black);
+  font-size: 10px;
+  padding: 1px 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.portrait-zoom-btn:hover {
+  background: #ffffff;
+}
+
+.portrait-zoom-btn:active {
+  border-top: 1px solid var(--win-black);
+  border-left: 1px solid var(--win-black);
+  border-right: 1px solid var(--win-light);
+  border-bottom: 1px solid var(--win-light);
+}
+
+.banner-text {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.banner-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.banner-title-row h3 {
+  margin: 0;
   font-size: 22px;
 }
+
+.banner-tag {
+  font-size: 11px;
+  font-weight: 700;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 1px 6px;
+  border: 1px solid #c7d2fe;
+}
+
+.banner-tagline {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: #4b5563;
+  font-style: italic;
+  line-height: 1.4;
+}
+
 
 .banner-sub {
   margin: 0 0 6px 0;
@@ -2709,20 +2838,60 @@ button {
 }
 
 .menu-header {
-  padding: 6px 10px;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--win-dark);
   margin-bottom: 4px;
   display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-header:hover {
+  background: #dfdfdf;
+}
+
+.menu-avatar-frame {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: #000;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-light);
+  border-bottom: 1px solid var(--win-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.menu-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.menu-user-details {
+  display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .menu-header b {
-  font-size: 14px;
+  font-size: 13px;
+  color: #111827;
 }
 
 .menu-header span {
-  font-size: 11px;
+  font-size: 10px;
   color: #4b5563;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .menu-items {
@@ -2870,6 +3039,256 @@ button {
 }
 
 /* ========================================================================= */
+/* Boot Sequence Logon Profile Splash                                         */
+/* ========================================================================= */
+.boot-logon-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #008080 0%, #004d4d 100%);
+  z-index: 10;
+  cursor: pointer;
+  animation: fadeInLogon 0.25s ease-out;
+  padding: 16px;
+}
+
+.boot-logon-box {
+  width: 92%;
+  max-width: 480px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-light);
+  border-left: 2px solid var(--win-light);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.logon-title-bar {
+  background: linear-gradient(90deg, var(--win-active-blue-start) 0%, var(--win-active-blue-end) 100%);
+  color: #ffffff;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: 0.5px;
+}
+
+.logon-dots {
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+.logon-body {
+  display: flex;
+  gap: 16px;
+  padding: 18px 16px;
+  align-items: center;
+  background: var(--win-gray);
+}
+
+.logon-portrait-frame {
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  background: #000000;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.logon-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.logon-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.logon-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #0f172a;
+  font-family: "Space Mono", monospace;
+}
+
+.logon-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #15803d;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logon-subtitle::before {
+  content: "✔";
+  display: inline-block;
+  font-size: 12px;
+}
+
+.logon-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: #475569;
+  margin-top: 4px;
+}
+
+.logon-loading-text {
+  color: #0369a1;
+  font-weight: 600;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.logon-progress-strip {
+  height: 6px;
+  background: #cbd5e1;
+  border-top: 1px solid var(--win-dark);
+  border-bottom: 1px solid var(--win-light);
+  overflow: hidden;
+  position: relative;
+}
+
+.logon-pulse-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background: linear-gradient(90deg, #38bdf8, #0284c7, #38bdf8);
+  animation: pulseSlide 1.2s infinite linear;
+}
+
+@keyframes pulseSlide {
+  0% { left: -40%; }
+  100% { left: 100%; }
+}
+
+@keyframes fadeInLogon {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ========================================================================= */
+/* Windows Picture Viewer Window                                             */
+/* ========================================================================= */
+.win-portrait-viewer .body {
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.image-viewer-window {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 420px;
+  background: var(--win-gray);
+  user-select: none;
+}
+
+.viewer-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 6px;
+  background: var(--win-gray);
+  border-bottom: 2px solid var(--win-dark);
+}
+
+.viewer-viewport {
+  flex: 1 1 0%;
+  min-height: 280px;
+  background-color: #18181b;
+  background-image:
+    linear-gradient(45deg, #222 25%, transparent 25%),
+    linear-gradient(-45deg, #222 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #222 75%),
+    linear-gradient(-45deg, transparent 75%, #222 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.viewer-image-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+}
+
+.viewer-pixel-img {
+  max-width: 380px;
+  max-height: 380px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  border: 2px solid #27272a;
+  display: block;
+}
+
+.viewer-status-bar {
+  display: flex;
+  gap: 4px;
+  padding: 3px 6px;
+  background: var(--win-gray);
+  border-top: 1px solid var(--win-light);
+  font-size: 11px;
+  color: #111827;
+  font-family: "Space Mono", monospace;
+  overflow-x: auto;
+}
+
+.viewer-status-bar .status-cell {
+  padding: 2px 8px;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-light);
+  border-bottom: 1px solid var(--win-light);
+  background: var(--win-gray);
+  white-space: nowrap;
+}
+
+/* ========================================================================= */
 /* CRT Overlay                                                               */
 /* ========================================================================= */
 .crt {
@@ -2953,6 +3372,35 @@ button {
 
   .desktop-watermark {
     display: none;
+  }
+
+  .profile-with-portrait {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .banner-title-row {
+    justify-content: center;
+  }
+
+  .banner-badges {
+    justify-content: center;
+  }
+
+  .portrait-card {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 160px;
+  }
+
+  .boot-logon-box {
+    width: 95%;
+  }
+
+  .logon-body {
+    flex-direction: column;
+    text-align: center;
   }
 }
 

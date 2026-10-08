@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { apps } from "@/data/apps";
+import { profile } from "@/data/profile";
 import Clock from "./Clock";
 import RetroIcon from "./RetroIcon";
 import { playActionClick } from "@/lib/sound";
@@ -76,9 +77,25 @@ export default function Taskbar({
           </div>
 
           <div className="menu-content">
-            <div className="menu-header">
-              <b>Krishna Agarwal</b>
-              <span>VIT Vellore • Sem 3 • CGPA 9.4</span>
+            <div
+              className="menu-header"
+              onClick={() => handleAppClick("mycomputer")}
+              title="Open My Computer / Profile"
+              style={{ cursor: "pointer" }}
+            >
+              <div className="menu-avatar-frame">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={profile.portraitUrl}
+                  alt={profile.name}
+                  className="menu-avatar-img"
+                  draggable={false}
+                />
+              </div>
+              <div className="menu-user-details">
+                <b>{profile.name}</b>
+                <span>{profile.university} • {profile.semester} • CGPA {profile.cgpa}</span>
+              </div>
             </div>
 
             <div className="menu-items">

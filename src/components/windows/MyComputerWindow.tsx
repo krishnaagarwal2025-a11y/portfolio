@@ -19,21 +19,50 @@ export default function MyComputerWindow({ onOpenApp }: { onOpenApp: (id: string
 
   return (
     <div className="mycomputer-window">
-      {/* System Banner */}
-      <div className="system-banner">
-        <div className="banner-icon">
-          <RetroIcon name="computer" size={48} />
+      {/* System Banner with Full Pixel-Art Portrait */}
+      <div className="system-banner profile-with-portrait">
+        {/* Left Side: Full Pixel-Art Portrait */}
+        <div
+          className="portrait-card"
+          onDoubleClick={() => onOpenApp("portrait-viewer")}
+          title="Krishna Agarwal (Double-click to open in Image Viewer)"
+        >
+          <div className="portrait-frame">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={profile.portraitUrl}
+              alt="Krishna Agarwal pixel-art portrait"
+              className="portrait-img"
+              draggable={false}
+            />
+          </div>
+          <div className="portrait-caption">
+            <span className="caption-text">portfolio.png</span>
+            <button
+              className="portrait-zoom-btn"
+              onClick={() => onOpenApp("portrait-viewer")}
+              title="Open in Windows Image Viewer"
+            >
+              🔍 View
+            </button>
+          </div>
         </div>
+
+        {/* Right Side: Profile Information */}
         <div className="banner-text">
-          <h3>{profile.name}</h3>
+          <div className="banner-title-row">
+            <h3>{profile.name}</h3>
+            <span className="banner-tag">Developer & Systems Engineer</span>
+          </div>
           <p className="banner-sub">
-            <b>{profile.degree}</b> • {profile.semester} • <b>{profile.university}</b>
+            <b>{profile.degree}</b> (CSE) • {profile.semester} • <b>{profile.university}</b>
           </p>
           <div className="banner-badges">
             <span className="retro-badge badge-primary">CGPA: {profile.cgpa} / 10.0</span>
             <span className="retro-badge badge-success">{profile.status}</span>
             <span className="retro-badge badge-info">Location: {profile.location}</span>
           </div>
+          <p className="banner-tagline">{profile.tagline}</p>
         </div>
       </div>
 

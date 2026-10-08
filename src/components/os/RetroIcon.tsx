@@ -144,6 +144,26 @@ export default function RetroIcon({ name, size = 36, className = "" }: RetroIcon
         </svg>
       );
 
+    case "image":
+    case "picture":
+    case "image-viewer":
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={className}
+        >
+          <rect x="3" y="4" width="26" height="24" rx="2" fill="#ffffff" stroke="#000" strokeWidth="1.5" />
+          <rect x="5" y="6" width="22" height="16" fill="#87ceeb" stroke="#808080" strokeWidth="1" />
+          <circle cx="10" cy="11" r="2.5" fill="#ffd700" />
+          <path d="M6 21l6-6 4 4 5-5 5 7H6z" fill="#228b22" />
+          <rect x="5" y="24" width="10" height="2" fill="#808080" />
+        </svg>
+      );
+
     case "document-pdf":
     case "resume":
       return (
