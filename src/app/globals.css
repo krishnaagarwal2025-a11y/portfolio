@@ -2452,6 +2452,19 @@ button {
   font-weight: 600;
 }
 
+.channel-val-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 1px 6px !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+}
+
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -2472,28 +2485,128 @@ button {
 .form-submit-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 .form-note {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 11.5px;
+  color: #4b5563;
+  margin-left: auto;
+}
+
+.form-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #ef4444;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: #991b1b;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.form-error-banner p {
+  margin: 0;
+}
+
+.error-fallback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
 }
 
 .dispatch-success-box {
   background: #f0fdf4;
-  border: 1px solid #86efac;
-  padding: 12px;
+  border: 2px solid #86efac;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.dispatch-success-box h4 {
-  margin: 0 0 6px 0;
+.dispatch-success-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: #15803d;
 }
 
-.dispatch-success-box p {
-  margin: 0 0 10px 0;
+.dispatch-success-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.success-icon {
+  background: #16a34a;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
+  font-weight: bold;
+}
+
+.success-note {
+  margin: 0;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.45;
+}
+
+.dispatch-receipt {
+  background: #ffffff;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-light);
+  border-bottom: 2px solid var(--win-light);
+  padding: 8px 10px;
+  font-family: "Space Mono", monospace;
+  font-size: 11.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px dashed #e5e7eb;
+  padding-bottom: 3px;
+}
+
+.receipt-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.receipt-key {
+  color: #6b7280;
+}
+
+.receipt-val {
+  font-weight: 600;
+  color: #111827;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dispatch-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 /* ========================================================================= */
@@ -2671,35 +2784,43 @@ button {
 /* Taskbar & Start Menu Styles                                               */
 /* ========================================================================= */
 .tray {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 42px;
+  width: 100vw;
+  height: 40px;
   background: var(--win-gray);
   border-top: 2px solid var(--win-light);
+  box-shadow: inset 0 1px 0 #ffffff;
   display: flex;
   align-items: center;
   padding: 0 4px;
-  gap: 6px;
+  gap: 4px;
   z-index: 9500;
   user-select: none;
+  box-sizing: border-box;
 }
 
 .start-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 32px;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  flex-shrink: 0;
   padding: 2px 10px;
   background: var(--win-gray);
   border-top: 2px solid var(--win-light);
   border-left: 2px solid var(--win-light);
   border-right: 2px solid var(--win-black);
   border-bottom: 2px solid var(--win-black);
-  font-size: 14px;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 var(--win-dark);
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .start-btn-pressed {
@@ -2708,26 +2829,39 @@ button {
   border-left: 2px solid var(--win-black);
   border-right: 2px solid var(--win-light);
   border-bottom: 2px solid var(--win-light);
+  box-shadow: inset -1px -1px 0 #dfdfdf, inset 1px 1px 0 var(--win-dark);
 }
 
 .start-logo {
-  font-size: 16px;
+  font-size: 15px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
 .tasks {
-  flex: 1;
+  flex: 1 1 0%;
+  min-width: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   overflow-x: auto;
-  height: 100%;
+  overflow-y: hidden;
+  height: 32px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.tasks::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .task-btn {
   height: 30px;
+  flex: 0 1 160px;
   max-width: 170px;
-  min-width: 110px;
-  display: flex;
+  min-width: 90px;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 2px 8px;
@@ -2736,10 +2870,19 @@ button {
   border-left: 2px solid var(--win-light);
   border-right: 2px solid var(--win-black);
   border-bottom: 2px solid var(--win-black);
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 var(--win-dark);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   text-align: left;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.task-btn:hover {
+  background: #e2dfd7;
 }
 
 .task-btn-active {
@@ -2748,24 +2891,35 @@ button {
   border-left: 2px solid var(--win-black);
   border-right: 2px solid var(--win-light);
   border-bottom: 2px solid var(--win-light);
+  box-shadow: inset -1px -1px 0 #dfdfdf, inset 1px 1px 0 var(--win-dark);
+}
+
+.task-icon {
+  flex-shrink: 0;
 }
 
 .task-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .systray {
-  display: flex;
+  flex-shrink: 0;
+  margin-left: auto;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   height: 30px;
   padding: 0 8px;
+  background: var(--win-gray);
   border-top: 1px solid var(--win-dark);
   border-left: 1px solid var(--win-dark);
   border-right: 1px solid var(--win-light);
   border-bottom: 1px solid var(--win-light);
+  box-sizing: border-box;
 }
 
 .tray-tool-btn {
@@ -2774,6 +2928,14 @@ button {
   cursor: pointer;
   font-size: 14px;
   padding: 2px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tray-tool-btn:hover {
+  transform: scale(1.1);
 }
 
 .tray-divider {
@@ -2785,11 +2947,15 @@ button {
 
 .clock-widget {
   font-family: "Space Mono", monospace;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  min-width: 72px;
+  min-width: 68px;
   text-align: right;
   cursor: default;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 /* Start Menu Pop-up */
@@ -3401,6 +3567,49 @@ button {
   .logon-body {
     flex-direction: column;
     text-align: center;
+  }
+
+  .tray {
+    height: 40px;
+    padding: 0 3px;
+    gap: 3px;
+  }
+
+  .start-btn {
+    height: 28px;
+    padding: 2px 6px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .tasks {
+    height: 30px;
+    gap: 2px;
+  }
+
+  .task-btn {
+    height: 28px;
+    min-width: 65px;
+    max-width: 110px;
+    padding: 2px 5px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .systray {
+    height: 28px;
+    padding: 0 4px;
+    gap: 3px;
+  }
+
+  .clock-widget {
+    min-width: auto;
+    font-size: 11px;
+  }
+
+  .tray-tool-btn {
+    font-size: 12px;
+    padding: 1px;
   }
 }
 
