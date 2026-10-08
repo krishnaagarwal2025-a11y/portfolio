@@ -24,7 +24,7 @@ export default function DesktopIcon({ id: _id, label, iconName, onOpen }: Deskto
       aria-label={`Open ${label}`}
     >
       <div className="icon-graphic">
-        <RetroIcon name={iconName} size={38} />
+        <RetroIcon name={iconName} size={46} />
       </div>
       <span className="icon-label">{label}</span>
     </button>

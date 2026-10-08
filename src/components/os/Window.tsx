@@ -24,7 +24,7 @@ interface Props {
 }
 
 export default function Window({
-  id: _id,
+  id,
   title,
   icon,
   z,
@@ -70,8 +70,10 @@ export default function Window({
     ? {
         left: 0,
         top: 0,
-        width: "100vw",
+        width: "100%",
+        maxWidth: "100%",
         height: "calc(100dvh - 42px)",
+        maxHeight: "calc(100dvh - 42px)",
         zIndex: z,
       }
     : {
@@ -84,7 +86,7 @@ export default function Window({
 
   return (
     <section
-      className={`win ${hidden ? "hid" : ""} ${maximized ? "maximized" : ""} ${isActive ? "active-win" : "inactive-win"}`}
+      className={`win win-${id} ${hidden ? "hid" : ""} ${maximized ? "maximized" : ""} ${isActive ? "active-win" : "inactive-win"}`}
       role="dialog"
       aria-label={title}
       style={style}
