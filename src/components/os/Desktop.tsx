@@ -243,9 +243,6 @@ function DesktopInner() {
         ))}
       </div>
 
-      {/* KRISHNA.EXE Animated Character Layer */}
-      <KrishnaExe />
-
       {/* Windows Layer */}
       {windowRegistry.map((win, idx) => {
         const winState = wm.wins[win.id];
@@ -279,6 +276,9 @@ function DesktopInner() {
           </Window>
         );
       })}
+
+      {/* KRISHNA.EXE Animated Character Layer — hovers over all open pages */}
+      <KrishnaExe />
 
       {/* Taskbar */}
       <Taskbar

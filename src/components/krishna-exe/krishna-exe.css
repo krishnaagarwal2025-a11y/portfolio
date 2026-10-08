@@ -4,7 +4,7 @@
 
 .krishna-exe-container {
   position: fixed;
-  z-index: 4; /* Above desktop watermark (1) and icons (2), below open windows (10+) */
+  z-index: 9200; /* Floats over all open windows, pages, and dialogs */
   pointer-events: none;
   display: flex;
   flex-direction: column;
@@ -40,6 +40,7 @@
   image-rendering: crisp-edges;
   object-fit: contain;
   pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
 }
 
 /* Proportional dimensions - enlarged to 144px (exact 3x integer pixel scaling) */

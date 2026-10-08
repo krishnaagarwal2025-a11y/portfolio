@@ -86,7 +86,7 @@ export default function KrishnaExe() {
     bottom: `${position.y}px`,
     transform: `translate3d(${position.x}px, 0, 0)`,
     willChange: "transform",
-    zIndex: 4,
+    zIndex: 9200, // Hovers on top of all open and maximized windows (10-500)
     pointerEvents: "none",
   };
 
