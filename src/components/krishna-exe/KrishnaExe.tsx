@@ -30,9 +30,13 @@ export default function KrishnaExe() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  // Preload initial idle frames on mount
+  // Preload initial idle and running frames on mount
   useEffect(() => {
-    ANIMATION_MAP.idle.frames.forEach((src) => {
+    [
+      ...ANIMATION_MAP.idle.frames,
+      ...ANIMATION_MAP.walk_left.frames,
+      ...ANIMATION_MAP.walk_right.frames,
+    ].forEach((src) => {
       const img = new Image();
       img.src = src;
     });

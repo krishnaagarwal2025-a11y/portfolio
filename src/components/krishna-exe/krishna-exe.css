@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   user-select: none;
-  transition: left 0.12s linear, bottom 0.2s ease;
+  transition: bottom 0.25s ease;
 }
 
 /* Clickable avatar hit-box */
@@ -42,25 +42,25 @@
   pointer-events: none;
 }
 
-/* Proportional dimensions */
+/* Proportional dimensions - enlarged to 144px (exact 3x integer pixel scaling) */
 .krishna-avatar-box.ratio-2-3 {
-  height: 105px;
-  width: 70px;
+  height: 144px;
+  width: 96px;
 }
 
 .krishna-avatar-box.ratio-1-1 {
-  height: 105px;
-  width: 105px;
+  height: 144px;
+  width: 144px;
 }
 
 .krishna-avatar-box.ratio-2-3 .krishna-sprite {
-  width: 70px;
-  height: 105px;
+  width: 96px;
+  height: 144px;
 }
 
 .krishna-avatar-box.ratio-1-1 .krishna-sprite {
-  width: 105px;
-  height: 105px;
+  width: 144px;
+  height: 144px;
 }
 
 /* Retro System Tooltip / Speech Bubble */
@@ -133,23 +133,23 @@
 /* Mobile & Touch Optimizations */
 @media (max-width: 768px) {
   .krishna-avatar-box.ratio-2-3 {
-    height: 68px;
-    width: 45px;
+    height: 90px;
+    width: 60px;
   }
 
   .krishna-avatar-box.ratio-1-1 {
-    height: 68px;
-    width: 68px;
+    height: 90px;
+    width: 90px;
   }
 
   .krishna-avatar-box.ratio-2-3 .krishna-sprite {
-    width: 45px;
-    height: 68px;
+    width: 60px;
+    height: 90px;
   }
 
   .krishna-avatar-box.ratio-1-1 .krishna-sprite {
-    width: 68px;
-    height: 68px;
+    width: 90px;
+    height: 90px;
   }
 
   .krishna-speech-bubble {

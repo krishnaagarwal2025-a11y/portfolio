@@ -27,9 +27,9 @@ export const ANIMATION_MAP: Record<KrishnaState, AnimationDefinition> = {
       "/emote/frames/walk_left_5.png",
       "/emote/frames/walk_left_6.png",
     ],
-    frameInterval: 110,
+    frameInterval: 90,
     aspectRatio: "2:3",
-    description: "Walking left across the desktop",
+    description: "Running left across the desktop",
   },
   walk_right: {
     state: "walk_right",
@@ -41,9 +41,9 @@ export const ANIMATION_MAP: Record<KrishnaState, AnimationDefinition> = {
       "/emote/frames/walk_right_5.png",
       "/emote/frames/walk_right_6.png",
     ],
-    frameInterval: 110,
+    frameInterval: 90,
     aspectRatio: "2:3",
-    description: "Walking right across the desktop",
+    description: "Running right across the desktop",
   },
   typing: {
     state: "typing",
