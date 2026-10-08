@@ -7,7 +7,6 @@ import { STATE_PRIORITIES } from "./animation-map";
 const KrishnaContext = createContext<KrishnaContextValue | null>(null);
 
 const INACTIVITY_TIMEOUT_MS = 40000; // 40 seconds of no interaction -> sleep
-const PERIODIC_RUN_INTERVAL_MS = 14000; // Periodically run left & right every 14 seconds
 
 export function KrishnaProvider({ children }: { children: ReactNode }) {
   const [ambientState, setAmbientStateInternal] = useState<KrishnaState>("idle");
@@ -15,44 +14,33 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
   const [bubbleText, setBubbleText] = useState<string | null>(null);
   const [isSleeping, setIsSleeping] = useState(false);
   const [isWalking, setIsWalking] = useState(false);
-  const [walkingDir, setWalkingDir] = useState<"walk_left" | "walk_right">("walk_right");
+  const [walkingDir, setWalkingDir] = useState<"walk_left" | "walk_right">("walk_left");
 
-  // Position state: default near bottom right of desktop floor (above 42px taskbar)
+  // Position state: x = distance in px from left edge, y = distance from bottom
   const [position, setPosition] = useState<KrishnaPosition>({
-    x: 0, // 0 until client calculates window width
-    y: 54, // px above bottom of screen
+    x: 800, // initialized safely on client mount
+    y: 52,
     facing: "left",
   });
 
-  const emoteTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const bubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const walkAnimRef = useRef<number | null>(null);
+  // Refs for access in timers without resetting intervals
   const posRef = useRef(position);
   posRef.current = position;
 
-  // Initialize position on client mount
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const initialX = Math.max(160, window.innerWidth - 220);
-      setPosition({ x: initialX, y: 54, facing: "left" });
-    }
+  const isWalkingRef = useRef(false);
+  isWalkingRef.current = isWalking;
 
-    const handleResize = () => {
-      if (typeof window !== "undefined") {
-        setPosition((prev) => {
-          const maxX = Math.max(160, window.innerWidth - 220);
-          if (prev.x > maxX || prev.x === 0) {
-            return { ...prev, x: maxX };
-          }
-          return prev;
-        });
-      }
-    };
+  const temporaryEmoteRef = useRef<KrishnaState | null>(null);
+  temporaryEmoteRef.current = temporaryEmote;
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  const isSleepingRef = useRef(false);
+  isSleepingRef.current = isSleeping;
+
+  const walkAnimRef = useRef<number | null>(null);
+  const patrolTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const emoteTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const bubbleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Active state calculated via priority
   const currentState: KrishnaState = (() => {
@@ -64,11 +52,11 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
 
   // Wake up handler
   const wakeUp = useCallback(() => {
-    if (isSleeping) {
+    if (isSleepingRef.current) {
       setIsSleeping(false);
       setBubbleText(null);
     }
-  }, [isSleeping]);
+  }, []);
 
   // Reset inactivity timer on any user interaction
   const resetInactivityTimer = useCallback(() => {
@@ -98,25 +86,22 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
     };
   }, [resetInactivityTimer]);
 
-  // Stop any active walking animation
-  const stopWalking = useCallback(() => {
-    if (walkAnimRef.current) {
-      cancelAnimationFrame(walkAnimRef.current);
-      walkAnimRef.current = null;
-    }
-    setIsWalking(false);
-  }, []);
-
   // Request temporary emote with priority checking
   const requestEmote = useCallback(
     (emote: KrishnaState, durationMs = 2800, speechText?: string) => {
       wakeUp();
-      stopWalking(); // If running when an emote is triggered, stop and play emote
+
+      // Stop running immediately if an emote is triggered
+      if (walkAnimRef.current) {
+        cancelAnimationFrame(walkAnimRef.current);
+        walkAnimRef.current = null;
+      }
+      setIsWalking(false);
+      isWalkingRef.current = false;
 
       const newPriority = STATE_PRIORITIES[emote] ?? 2;
       const currentPriority = temporaryEmote ? (STATE_PRIORITIES[temporaryEmote] ?? 0) : 0;
 
-      // Higher or equal priority overrides currently playing emote
       if (newPriority >= currentPriority) {
         if (emoteTimerRef.current) clearTimeout(emoteTimerRef.current);
 
@@ -134,7 +119,7 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
         }, durationMs);
       }
     },
-    [temporaryEmote, wakeUp, stopWalking]
+    [temporaryEmote, wakeUp]
   );
 
   // Set ambient state
@@ -146,101 +131,128 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
     [wakeUp]
   );
 
-  // Smooth bounded running / walking across screen
+  // Smooth bounded running across screen
   const walkTo = useCallback(
-    (targetX: number) => {
-      wakeUp();
+    (targetX: number, onArrival?: () => void) => {
+      if (typeof window === "undefined") return;
 
-      // Check if prefers reduced motion
-      if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setPosition((prev) => ({ ...prev, x: targetX }));
+      const startX = posRef.current.x;
+      const delta = targetX - startX;
+      if (Math.abs(delta) < 20) {
+        if (onArrival) onArrival();
         return;
       }
 
-      if (typeof window === "undefined") return;
-
-      const currentX = posRef.current.x || (window.innerWidth - 220);
-      const minX = 160; // Keep clear of desktop icons column
-      const maxX = Math.max(minX + 80, window.innerWidth - 200);
-      const clampedTargetX = Math.max(minX, Math.min(maxX, targetX));
-
-      const delta = clampedTargetX - currentX;
-      if (Math.abs(delta) < 25) return; // already in target area
-
-      const dir = delta > 0 ? "walk_right" : "walk_left";
+      const dir: "walk_left" | "walk_right" = delta > 0 ? "walk_right" : "walk_left";
       setWalkingDir(dir);
       setIsWalking(true);
+      isWalkingRef.current = true;
       setPosition((prev) => ({ ...prev, facing: delta > 0 ? "right" : "left" }));
 
-      // Running speed: ~220px per second for an active, spirited run
+      // Running speed: ~220px per second
       const speed = 220;
-      const duration = Math.min(3600, Math.max(800, (Math.abs(delta) / speed) * 1000));
+      const duration = Math.min(4500, Math.max(800, (Math.abs(delta) / speed) * 1000));
       const startTime = performance.now();
 
       const step = (now: number) => {
+        // If an emote starts, abort running
+        if (temporaryEmoteRef.current) {
+          setIsWalking(false);
+          isWalkingRef.current = false;
+          walkAnimRef.current = null;
+          return;
+        }
+
         const elapsed = now - startTime;
         const progress = Math.min(1, elapsed / duration);
+        const currentX = startX + delta * progress;
 
-        const currentProgX = currentX + delta * progress;
-        setPosition((prev) => ({ ...prev, x: Math.round(currentProgX) }));
+        setPosition((prev) => ({ ...prev, x: Math.round(currentX) }));
 
         if (progress < 1) {
           walkAnimRef.current = requestAnimationFrame(step);
         } else {
           setIsWalking(false);
+          isWalkingRef.current = false;
           walkAnimRef.current = null;
+          if (onArrival) onArrival();
         }
       };
 
       if (walkAnimRef.current) cancelAnimationFrame(walkAnimRef.current);
       walkAnimRef.current = requestAnimationFrame(step);
     },
-    [wakeUp]
+    []
   );
 
-  // PERIODIC RUNNING: Periodically run to left and right across desktop
+  // PERIODIC RUNNING: Continuously runs back and forth between left and right sides
   useEffect(() => {
-    // If reduced motion is preferred, do not auto-run
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
+    if (typeof window === "undefined") return;
 
-    const periodicInterval = setInterval(() => {
-      // Do not run if character is sleeping, currently running, or playing a temporary emote
-      if (isSleeping || isWalking || temporaryEmote) {
+    // Start on the right side of the screen
+    const initialRightX = Math.max(200, window.innerWidth - 220);
+    setPosition({ x: initialRightX, y: 52, facing: "left" });
+    posRef.current = { x: initialRightX, y: 52, facing: "left" };
+
+    let isRunningToLeft = true;
+
+    const runPatrolStep = () => {
+      // If sleeping or in temporary emote, retry shortly
+      if (isSleepingRef.current || temporaryEmoteRef.current || isWalkingRef.current) {
+        patrolTimerRef.current = setTimeout(runPatrolStep, 2000);
         return;
       }
 
-      if (typeof window === "undefined") return;
+      const minX = window.innerWidth < 768 ? 40 : 180;
+      const maxX = Math.max(minX + 80, window.innerWidth - (window.innerWidth < 768 ? 100 : 220));
 
-      const currentX = posRef.current.x || (window.innerWidth - 220);
-      const midPoint = window.innerWidth / 2;
-      const minX = 180;
-      const maxX = Math.max(minX + 100, window.innerWidth - 240);
-
-      // If currently on the right half, run over to the left side!
-      // If currently on the left half, run over to the right side!
       let targetX: number;
-      if (currentX > midPoint) {
-        // Run to the left zone (between 180px and 260px)
-        targetX = Math.round(minX + Math.random() * 80);
+      if (isRunningToLeft) {
+        targetX = Math.round(minX + Math.random() * 50);
+        isRunningToLeft = false;
       } else {
-        // Run to the right zone (near window.innerWidth - 240px)
-        targetX = Math.round(maxX - Math.random() * 80);
+        targetX = Math.round(maxX - Math.random() * 50);
+        isRunningToLeft = true;
       }
 
-      walkTo(targetX);
-    }, PERIODIC_RUN_INTERVAL_MS);
+      walkTo(targetX, () => {
+        // Once arrived, rest for ~5 to 7 seconds before next run
+        const restDuration = 5000 + Math.random() * 2500;
+        patrolTimerRef.current = setTimeout(runPatrolStep, restDuration);
+      });
+    };
 
-    return () => clearInterval(periodicInterval);
-  }, [isSleeping, isWalking, temporaryEmote, walkTo]);
+    // Begin first running sequence 2.5 seconds after desktop loads!
+    patrolTimerRef.current = setTimeout(runPatrolStep, 2500);
 
-  // Cleanup on unmount
+    const handleResize = () => {
+      if (typeof window !== "undefined") {
+        setPosition((prev) => {
+          const maxX = Math.max(160, window.innerWidth - 220);
+          if (prev.x > maxX) {
+            return { ...prev, x: maxX };
+          }
+          return prev;
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (patrolTimerRef.current) clearTimeout(patrolTimerRef.current);
+      if (walkAnimRef.current) cancelAnimationFrame(walkAnimRef.current);
+    };
+  }, [walkTo]);
+
+  // Cleanup timers on unmount
   useEffect(() => {
     return () => {
       if (emoteTimerRef.current) clearTimeout(emoteTimerRef.current);
       if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+      if (patrolTimerRef.current) clearTimeout(patrolTimerRef.current);
       if (walkAnimRef.current) cancelAnimationFrame(walkAnimRef.current);
     };
   }, []);

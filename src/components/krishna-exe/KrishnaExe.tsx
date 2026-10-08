@@ -79,10 +79,15 @@ export default function KrishnaExe() {
   const currentFrameSrc = currentConfig.frames[frameIndex] || currentConfig.frames[0];
   const ratioClass = currentConfig.aspectRatio === "1:1" ? "ratio-1-1" : "ratio-2-3";
 
-  // Dynamic style for positioning
+  // Dynamic style for positioning using hardware-accelerated translate3d
   const containerStyle: React.CSSProperties = {
+    position: "fixed",
+    left: 0,
     bottom: `${position.y}px`,
-    ...(position.x > 0 ? { left: `${position.x}px` } : { right: "32px" }),
+    transform: `translate3d(${position.x}px, 0, 0)`,
+    willChange: "transform",
+    zIndex: 4,
+    pointerEvents: "none",
   };
 
   return (
@@ -112,11 +117,6 @@ export default function KrishnaExe() {
           className="krishna-sprite"
           draggable={false}
         />
-
-        {/* Small PID indicator on hover */}
-        <span className="krishna-pid-pill">
-          krishna.exe : {isSleeping ? "sleeping" : currentState}
-        </span>
       </div>
     </div>
   );

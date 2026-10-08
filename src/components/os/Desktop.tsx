@@ -218,11 +218,7 @@ function DesktopInner() {
     <main className="screen" id="krishnaos-desktop">
       {phase === "boot" && <BootScreen onDone={finishBoot} />}
 
-      {/* Desktop Background Watermark */}
-      <div className="desktop-watermark" aria-hidden="true">
-        <span className="watermark-logo">Krishna<b>OS</b></span>
-        <span className="watermark-sub">VIT Vellore • Developer Workstation</span>
-      </div>
+
 
       {/* Desktop Icons Grid */}
       <div className="icons" role="region" aria-label="Desktop Icons">
