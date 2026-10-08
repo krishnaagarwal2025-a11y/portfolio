@@ -3,10 +3,13 @@ import { projects } from "@/data/projects";
 import { skillsMap } from "@/data/skills";
 import { gitCommits } from "@/data/gitHistory";
 
+import { KrishnaState } from "@/components/krishna-exe/types";
+
 export interface TerminalContext {
   openApp: (id: string) => void;
   clear: () => void;
   toggleMatrix: () => void;
+  setKrishnaEmote?: (emote: KrishnaState, durationMs?: number, speechText?: string) => void;
 }
 
 export type CommandFn = (ctx: TerminalContext, args: string[]) => string[];
@@ -29,6 +32,9 @@ export const commands: Record<string, CommandFn> = {
     "  git            View recent Git commit log",
     "  resume         View curriculum vitae & PDF document",
     "  contact        Communication coordinates & repository link",
+    "  krishna        Inspect KRISHNA.EXE animated companion process",
+    "  emote <name>   Trigger character emote (e.g. emote chai, emote typing)",
+    "  chai, coffee   Take a refreshment break",
     "  uptime         Display active session uptime",
     "  date           Display current system time and date",
     "  matrix         Toggle Matrix digital rain visualizer",
@@ -36,6 +42,62 @@ export const commands: Record<string, CommandFn> = {
     "  open <app>     Open graphical window (e.g. open morrow, open projects)",
     "  clear          Clear the terminal screen",
   ],
+
+  krishna: (ctx) => {
+    ctx.setKrishnaEmote?.("happy", 3500, "krishna.exe [PID 1337] status: OK");
+    return [
+      "============================================================",
+      "KRISHNA.EXE — Desktop Animated Subsystem (v1.0.0)",
+      "============================================================",
+      "Process ID:   1337",
+      "Status:       RUNNING (Interactive Daemon)",
+      "Runtime:      TypeScript / React / Canvas-Free Frame Engine",
+      "Memory:       48 KB sprite buffer",
+      "Available:    idle, typing, thinking, terminal, success,",
+      "              error, happy, confused, chai, reading, sleeping",
+      "",
+      "Try command:  'emote <name>' (e.g. 'emote chai', 'emote typing')",
+      "Or click Krishna.exe directly on your desktop!",
+      "============================================================",
+    ];
+  },
+
+  "krishna.exe": (ctx, args) => commands.krishna(ctx, args),
+
+  emote: (ctx, args) => {
+    const requested = (args[0] || "").toLowerCase() as KrishnaState;
+    const validStates: KrishnaState[] = [
+      "idle",
+      "typing",
+      "thinking",
+      "terminal",
+      "success",
+      "error",
+      "happy",
+      "confused",
+      "chai",
+      "reading",
+      "sleeping",
+    ];
+    if (validStates.includes(requested)) {
+      ctx.setKrishnaEmote?.(requested, 3500, `krishna.exe: '${requested}'`);
+      return [`Triggered emote: ${requested}`];
+    }
+    return [
+      `Invalid emote: '${args[0] || ""}'`,
+      `Valid emotes: ${validStates.join(", ")}`,
+    ];
+  },
+
+  chai: (ctx) => {
+    ctx.setKrishnaEmote?.("chai", 3500, "Fresh masala chai brewed!");
+    return ["Brewing a warm cup of cutting chai... Enjoy!"];
+  },
+
+  coffee: (ctx) => {
+    ctx.setKrishnaEmote?.("chai", 3500, "Converting caffeine to code...");
+    return ["Brewing coffee... (Krishna prefers masala chai!)"];
+  },
 
   neofetch: () => {
     return [
@@ -282,11 +344,29 @@ export function executeCommand(input: string, ctx: TerminalContext): string[] {
   if (!trimmed) return [];
 
   const [cmdName, ...args] = trimmed.split(/\s+/);
-  const handler = commands[cmdName.toLowerCase()];
+  const lowerCmd = cmdName.toLowerCase();
+  const handler = commands[lowerCmd];
 
   if (handler) {
+    // Trigger specialized reactions if not already handled inside specific command
+    if (!["cat", "clear", "matrix", "emote", "krishna", "krishna.exe", "chai", "coffee"].includes(lowerCmd)) {
+      if (lowerCmd === "morrow") {
+        ctx.setKrishnaEmote?.("typing", 3500, "krishna.exe: building RAG pipeline...");
+      } else if (["skills", "projects", "network", "wearable", "auraguard", "education", "hackathons"].includes(lowerCmd)) {
+        ctx.setKrishnaEmote?.("thinking", 2800);
+      } else if (lowerCmd === "security") {
+        ctx.setKrishnaEmote?.("thinking", 3000, "krishna.exe: inspecting security telemetry");
+      } else if (lowerCmd === "resume") {
+        ctx.setKrishnaEmote?.("reading", 3000, "krishna.exe: reading resume.pdf");
+      } else {
+        ctx.setKrishnaEmote?.("success", 2200);
+      }
+    }
     return handler(ctx, args);
   }
+
+  // Unknown command triggers confused/error emote
+  ctx.setKrishnaEmote?.("confused", 2500, "krishna.exe: unknown command");
 
   return [
     `bash: ${cmdName}: command not found.`,

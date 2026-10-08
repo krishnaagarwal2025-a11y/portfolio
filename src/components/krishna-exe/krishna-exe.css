@@ -1,0 +1,169 @@
+/* ========================================================================= */
+/* KRISHNA.EXE — Desktop Animated Companion CSS                             */
+/* ========================================================================= */
+
+.krishna-exe-container {
+  position: fixed;
+  z-index: 4; /* Above desktop watermark (1) and icons (2), below open windows (10+) */
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+  transition: left 0.12s linear, bottom 0.2s ease;
+}
+
+/* Clickable avatar hit-box */
+.krishna-avatar-box {
+  pointer-events: auto;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.krishna-avatar-box:hover {
+  transform: translateY(-2px);
+}
+
+.krishna-avatar-box:active {
+  transform: translateY(1px);
+}
+
+/* Crisp pixel-art sprite rendering */
+.krishna-sprite {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Proportional dimensions */
+.krishna-avatar-box.ratio-2-3 {
+  height: 105px;
+  width: 70px;
+}
+
+.krishna-avatar-box.ratio-1-1 {
+  height: 105px;
+  width: 105px;
+}
+
+.krishna-avatar-box.ratio-2-3 .krishna-sprite {
+  width: 70px;
+  height: 105px;
+}
+
+.krishna-avatar-box.ratio-1-1 .krishna-sprite {
+  width: 105px;
+  height: 105px;
+}
+
+/* Retro System Tooltip / Speech Bubble */
+.krishna-speech-bubble {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffe1; /* Windows classic tooltip pale yellow */
+  color: #000000;
+  border: 1px solid #000000;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  padding: 3px 8px;
+  font-family: var(--font-mono), "MS Sans Serif", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: bubblePop 0.15s ease-out;
+  z-index: 10;
+}
+
+.krishna-speech-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -4px;
+  border-width: 4px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+
+@keyframes bubblePop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* Subtle process indicator badge on hover or status */
+.krishna-pid-pill {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #1e3a8a;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1px 4px;
+  border: 1px solid #94a3b8;
+  border-radius: 2px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.krishna-avatar-box:hover .krishna-pid-pill {
+  opacity: 1;
+}
+
+/* Mobile & Touch Optimizations */
+@media (max-width: 768px) {
+  .krishna-avatar-box.ratio-2-3 {
+    height: 68px;
+    width: 45px;
+  }
+
+  .krishna-avatar-box.ratio-1-1 {
+    height: 68px;
+    width: 68px;
+  }
+
+  .krishna-avatar-box.ratio-2-3 .krishna-sprite {
+    width: 45px;
+    height: 68px;
+  }
+
+  .krishna-avatar-box.ratio-1-1 .krishna-sprite {
+    width: 68px;
+    height: 68px;
+  }
+
+  .krishna-speech-bubble {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .krishna-exe-container {
+    transition: none !important;
+  }
+  .krishna-speech-bubble {
+    animation: none !important;
+  }
+}

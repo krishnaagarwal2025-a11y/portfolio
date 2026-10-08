@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState, useMemo } from "react";
-import { apps, AppId } from "@/data/apps";
+import { apps } from "@/data/apps";
 import { projects } from "@/data/projects";
 import { useWindowManager } from "@/hooks/useWindowManager";
-import { playWindowOpen, setSoundEnabled, playStartupChime } from "@/lib/sound";
+import { playWindowOpen, setSoundEnabled } from "@/lib/sound";
 
 import BootScreen from "./BootScreen";
 import DesktopIcon from "./DesktopIcon";
@@ -21,11 +21,22 @@ import ResumeWindow from "../windows/ResumeWindow";
 import ContactWindow from "../windows/ContactWindow";
 import Terminal from "../terminal/Terminal";
 
+import { KrishnaProvider, useKrishnaExe, KrishnaExe } from "../krishna-exe";
+
 export default function Desktop() {
+  return (
+    <KrishnaProvider>
+      <DesktopInner />
+    </KrishnaProvider>
+  );
+}
+
+function DesktopInner() {
   const [phase, setPhase] = useState<"init" | "boot" | "desk">("init");
   const [sound, setSound] = useState(true);
   const [crt, setCrt] = useState(true);
   const wm = useWindowManager();
+  const { requestEmote, setAmbientState } = useKrishnaExe();
 
   // Boot sequence check
   useEffect(() => {
@@ -47,19 +58,75 @@ export default function Desktop() {
   const finishBoot = useCallback(() => {
     sessionStorage.setItem("kos-booted", "1");
     setPhase("desk");
-  }, []);
+    // Greet user on desktop initialization
+    requestEmote("happy", 3200, "krishna.exe [PID 1337] online!");
+  }, [requestEmote]);
 
   const handleRestart = useCallback(() => {
     sessionStorage.removeItem("kos-booted");
     setPhase("boot");
   }, []);
 
+  // Determine currently focused / top window
+  const activeWindowId = useMemo(() => {
+    let topId: string | null = null;
+    let maxZ = -1;
+    for (const [id, win] of Object.entries(wm.wins)) {
+      if (win.open && !win.min && win.z > maxZ) {
+        maxZ = win.z;
+        topId = id;
+      }
+    }
+    return topId;
+  }, [wm.wins]);
+
+  // Sync character ambient state with active window
+  useEffect(() => {
+    if (!activeWindowId) {
+      setAmbientState("idle");
+      return;
+    }
+
+    if (activeWindowId === "terminal") {
+      setAmbientState("terminal");
+    } else if (activeWindowId === "p-morrow") {
+      setAmbientState("typing");
+    } else if (activeWindowId === "resume") {
+      setAmbientState("reading");
+    } else if (activeWindowId === "contact") {
+      setAmbientState("chai");
+    } else if (activeWindowId === "projects" || activeWindowId.startsWith("p-")) {
+      setAmbientState("thinking");
+    } else if (activeWindowId === "skills" || activeWindowId === "git") {
+      setAmbientState("thinking");
+    } else if (activeWindowId === "mycomputer") {
+      setAmbientState("idle");
+    } else {
+      setAmbientState("idle");
+    }
+  }, [activeWindowId, setAmbientState]);
+
   const openApp = useCallback(
     (id: string) => {
       playWindowOpen();
       wm.open(id);
+
+      // Trigger contextual reactions when user opens specific applications
+      if (id === "p-morrow") {
+        requestEmote("typing", 3500, "Building Morrow RAG pipeline...");
+      } else if (id === "terminal") {
+        requestEmote("terminal", 3000, "tty1 terminal initialized");
+      } else if (id === "resume") {
+        requestEmote("reading", 3000, "Inspecting curriculum vitae");
+      } else if (id === "projects") {
+        requestEmote("thinking", 2800, "Exploring systems & projects");
+      } else if (id === "contact") {
+        requestEmote("chai", 3000, "Let's connect over chai!");
+      } else if (id === "skills" || id === "git") {
+        requestEmote("thinking", 2500);
+      }
     },
-    [wm]
+    [wm, requestEmote]
   );
 
   const toggleSound = (val: boolean) => {
@@ -169,6 +236,9 @@ export default function Desktop() {
           />
         ))}
       </div>
+
+      {/* KRISHNA.EXE Animated Character Layer */}
+      <KrishnaExe />
 
       {/* Windows Layer */}
       {windowRegistry.map((win, idx) => {

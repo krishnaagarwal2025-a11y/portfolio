@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { executeCommand, TerminalContext } from "./terminalCommands";
 import { beep, playErrorBeep } from "@/lib/sound";
+import { useKrishnaExe } from "../krishna-exe/KrishnaContext";
 
 interface Props {
   onOpenApp: (id: string) => void;
@@ -15,6 +16,7 @@ interface HistoryItem {
 }
 
 export default function Terminal({ onOpenApp }: Props) {
+  const { requestEmote } = useKrishnaExe();
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([
     {
@@ -54,6 +56,7 @@ export default function Terminal({ onOpenApp }: Props) {
     openApp: onOpenApp,
     clear: () => setHistory([]),
     toggleMatrix: () => setMatrixMode((prev) => !prev),
+    setKrishnaEmote: (emote, duration, text) => requestEmote(emote, duration, text),
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

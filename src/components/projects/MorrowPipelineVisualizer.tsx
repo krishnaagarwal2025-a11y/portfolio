@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { playActionClick } from "@/lib/sound";
+import { useKrishnaExe } from "../krishna-exe/KrishnaContext";
 
 const PIPELINE_STAGES = [
   {
@@ -98,6 +99,7 @@ Provide citations and references."""`,
 ];
 
 export default function MorrowPipelineVisualizer() {
+  const { requestEmote } = useKrishnaExe();
   const [selectedStage, setSelectedStage] = useState(PIPELINE_STAGES[2]); // Default to chunking
 
   return (
@@ -118,6 +120,7 @@ export default function MorrowPipelineVisualizer() {
                 onClick={() => {
                   playActionClick();
                   setSelectedStage(stage);
+                  requestEmote("typing", 2500, `krishna.exe: inspecting ${stage.name.split(". ")[1]}`);
                 }}
                 role="listitem"
                 title={stage.name}
