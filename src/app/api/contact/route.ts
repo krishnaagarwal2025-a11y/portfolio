@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { addMessage } from "@/lib/messagesStore";
 
 export async function POST(req: Request) {
   try {
@@ -12,34 +13,48 @@ export async function POST(req: Request) {
       );
     }
 
-    // FormSubmit handles sending directly to Krishna's inbox
-    // We send form-urlencoded to FormSubmit AJAX endpoint with origin headers
-    const params = new URLSearchParams();
-    params.append("name", name);
-    params.append("email", email);
-    params.append("message", message);
-    params.append("_subject", `[KrishnaOS Portfolio] New Proposal / Message from ${name}`);
-    params.append("_replyto", email);
-    params.append("_template", "table");
-    params.append("_captcha", "false");
+    const userAgent = req.headers.get("user-agent") || undefined;
 
-    const response = await fetch("https://formsubmit.co/ajax/agarwalkrishna1204@gmail.com", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Accept: "application/json",
-        Origin: "https://portfolioclaude-nu.vercel.app",
-        Referer: "https://portfolioclaude-nu.vercel.app",
-      },
-      body: params.toString(),
+    // 1. Permanently store in Krishna's private database (Vercel Blob store)
+    const saved = await addMessage({
+      name,
+      email,
+      message,
+      userAgent,
     });
 
-    const data = await response.json().catch(() => ({ success: "true", message: "Dispatched" }));
+    // 2. Optional background notification ping to FormSubmit (non-blocking)
+    try {
+      const params = new URLSearchParams();
+      params.append("name", name);
+      params.append("email", email);
+      params.append("message", message);
+      params.append("_subject", `[KrishnaOS Inbox] New Message from ${name}`);
+      params.append("_replyto", email);
+      params.append("_template", "table");
+      params.append("_captcha", "false");
+
+      fetch("https://formsubmit.co/ajax/agarwalkrishna1204@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+          Origin: "https://portfolioclaude-nu.vercel.app",
+          Referer: "https://portfolioclaude-nu.vercel.app",
+        },
+        body: params.toString(),
+      }).catch(() => {
+        // Silent catch: primary store is already saved!
+      });
+    } catch {
+      // Ignored
+    }
 
     return NextResponse.json({
       success: true,
-      message: data.message || "Message dispatched to agarwalkrishna1204@gmail.com",
-      data,
+      message: "Message recorded in Krishna's private inbox.",
+      id: saved.id,
+      timestamp: saved.createdAt,
     });
   } catch (error: unknown) {
     const errorMsg = error instanceof Error ? error.message : "Transmission relay error";

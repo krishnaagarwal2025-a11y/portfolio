@@ -221,17 +221,17 @@ export default function ContactWindow() {
           <div className="dispatch-success-box">
             <div className="dispatch-success-header">
               <span className="success-icon">✓</span>
-              <h4>Message Transmitted to Krishna&apos;s Inbox!</h4>
+              <h4>Message Recorded in Krishna&apos;s Private Inbox!</h4>
             </div>
             <p className="success-note">
-              Thank you, <b>{formName || "Visitor"}</b>. Your message was processed and forwarded directly to{" "}
-              <b>{recipientEmail}</b>. Krishna will review your message and reply to <b>{formEmail}</b>.
+              Thank you, <b>{formName || "Visitor"}</b>. Your message has been securely recorded into Krishna&apos;s
+              private dispatch database. Krishna reviews incoming inquiries directly and will reply to <b>{formEmail}</b>.
             </p>
 
             <div className="dispatch-receipt">
               <div className="receipt-row">
-                <span className="receipt-key">Recipient:</span>
-                <span className="receipt-val">{recipientEmail}</span>
+                <span className="receipt-key">Destination:</span>
+                <span className="receipt-val">Krishna&apos;s Private Mailbox Terminal</span>
               </div>
               <div className="receipt-row">
                 <span className="receipt-key">Sender:</span>
@@ -239,7 +239,7 @@ export default function ContactWindow() {
               </div>
               <div className="receipt-row">
                 <span className="receipt-key">Status:</span>
-                <span className="receipt-val text-ok">DELIVERED TO INBOX (SMTP RELAY OK)</span>
+                <span className="receipt-val text-ok">RECORDED IN SECURE DISPATCH LOG</span>
               </div>
             </div>
 
