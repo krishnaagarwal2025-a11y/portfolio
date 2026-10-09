@@ -33,8 +33,8 @@ export const profile = {
     leetcode: "200+ LeetCode problems solved",
     count: "200+",
     areas: ["Data Structures", "Algorithms", "Problem Solving"],
-    profileText: "leetcode.com/u/kris_07",
-    profileUrl: "https://leetcode.com/u/kris_07/",
+    profileText: "leetcode.krishna07.cv",
+    profileUrl: "https://leetcode.krishna07.cv",
   },
 
   academicAreas: {
@@ -107,12 +107,12 @@ export const profile = {
 
   contact: {
     email: "agarwalkrishna1204@gmail.com",
-    github: "github.com/krishnaagarwal2025-a11y",
-    githubUrl: "https://github.com/krishnaagarwal2025-a11y",
-    linkedin: "linkedin.com/in/krishna-agarwal0108",
-    linkedinUrl: "https://www.linkedin.com/in/krishna-agarwal0108/",
-    leetcode: "leetcode.com/u/kris_07",
-    leetcodeUrl: "https://leetcode.com/u/kris_07/",
+    github: "github.krishna07.cv",
+    githubUrl: "https://github.krishna07.cv",
+    linkedin: "linkedin.krishna07.cv",
+    linkedinUrl: "https://linkedin.krishna07.cv",
+    leetcode: "leetcode.krishna07.cv",
+    leetcodeUrl: "https://leetcode.krishna07.cv",
     repo: "https://github.com/krishnaagarwal2025-a11y/Memora.git",
     resumeUrl: "/krishna_cyber.pdf",
     resumeFileName: "krishna_cyber.pdf",

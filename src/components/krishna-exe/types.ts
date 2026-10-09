@@ -45,4 +45,5 @@ export interface KrishnaContextValue {
   setAmbientState: (state: KrishnaState) => void;
   walkTo: (targetX: number) => void;
   wakeUp: () => void;
+  startPatrol: (delayMs?: number) => void;
 }

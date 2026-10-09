@@ -86,6 +86,19 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
     };
   }, [resetInactivityTimer]);
 
+  const runPatrolStepRef = useRef<(() => void) | null>(null);
+
+  const scheduleNextPatrol = useCallback((delayMs = 4000) => {
+    if (patrolTimerRef.current) clearTimeout(patrolTimerRef.current);
+    patrolTimerRef.current = setTimeout(() => {
+      runPatrolStepRef.current?.();
+    }, delayMs);
+  }, []);
+
+  const startPatrol = useCallback((delayMs = 1500) => {
+    scheduleNextPatrol(delayMs);
+  }, [scheduleNextPatrol]);
+
   // Request temporary emote with priority checking
   const requestEmote = useCallback(
     (emote: KrishnaState, durationMs = 2800, speechText?: string) => {
@@ -116,10 +129,12 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
         emoteTimerRef.current = setTimeout(() => {
           setTemporaryEmote(null);
           emoteTimerRef.current = null;
+          // Automatically resume periodic running after emote ends
+          scheduleNextPatrol(3500);
         }, durationMs);
       }
     },
-    [temporaryEmote, wakeUp]
+    [temporaryEmote, wakeUp, scheduleNextPatrol]
   );
 
   // Set ambient state
@@ -216,19 +231,21 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
       }
 
       walkTo(targetX, () => {
-        // Once arrived, rest for ~5 to 7 seconds before next run
-        const restDuration = 5000 + Math.random() * 2500;
-        patrolTimerRef.current = setTimeout(runPatrolStep, restDuration);
+        // Once arrived, rest for ~4 to 6 seconds before next run
+        const restDuration = 4000 + Math.random() * 2500;
+        scheduleNextPatrol(restDuration);
       });
     };
 
-    // Begin first running sequence 2.5 seconds after desktop loads!
-    patrolTimerRef.current = setTimeout(runPatrolStep, 2500);
+    runPatrolStepRef.current = runPatrolStep;
+
+    // Begin first running sequence shortly after mount
+    scheduleNextPatrol(2000);
 
     const handleResize = () => {
       if (typeof window !== "undefined") {
         setPosition((prev) => {
-          const maxX = Math.max(160, window.innerWidth - 220);
+          const maxX = Math.max(160, window.innerWidth - (window.innerWidth < 768 ? 90 : 220));
           if (prev.x > maxX) {
             return { ...prev, x: maxX };
           }
@@ -241,10 +258,11 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      runPatrolStepRef.current = null;
       if (patrolTimerRef.current) clearTimeout(patrolTimerRef.current);
       if (walkAnimRef.current) cancelAnimationFrame(walkAnimRef.current);
     };
-  }, [walkTo]);
+  }, [walkTo, scheduleNextPatrol]);
 
   // Cleanup timers on unmount
   useEffect(() => {
@@ -268,6 +286,7 @@ export function KrishnaProvider({ children }: { children: ReactNode }) {
     setAmbientState,
     walkTo,
     wakeUp,
+    startPatrol,
   };
 
   return <KrishnaContext.Provider value={value}>{children}</KrishnaContext.Provider>;

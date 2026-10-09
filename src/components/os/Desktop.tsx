@@ -37,7 +37,23 @@ function DesktopInner() {
   const [sound, setSound] = useState(true);
   const [crt, setCrt] = useState(true);
   const wm = useWindowManager();
-  const { requestEmote, setAmbientState } = useKrishnaExe();
+  const { requestEmote, setAmbientState, startPatrol } = useKrishnaExe();
+
+  // Ensure document never scrolls out of viewport on taskbar hide / iframe embed
+  useEffect(() => {
+    const handleScrollReset = () => {
+      if (typeof window !== "undefined" && (window.scrollX !== 0 || window.scrollY !== 0)) {
+        window.scrollTo(0, 0);
+      }
+    };
+    window.addEventListener("scroll", handleScrollReset);
+    window.addEventListener("resize", handleScrollReset);
+    handleScrollReset();
+    return () => {
+      window.removeEventListener("scroll", handleScrollReset);
+      window.removeEventListener("resize", handleScrollReset);
+    };
+  }, []);
 
   // Boot sequence check
   useEffect(() => {
@@ -49,19 +65,21 @@ function DesktopInner() {
   }, []);
 
   const openWin = wm.open;
-  // Automatically open My Computer on first desktop arrival
+  // Automatically open My Computer and kickstart Krishna.exe on first desktop arrival
   useEffect(() => {
     if (phase === "desk") {
       openWin("mycomputer");
+      startPatrol(2000);
     }
-  }, [phase, openWin]);
+  }, [phase, openWin, startPatrol]);
 
   const finishBoot = useCallback(() => {
     sessionStorage.setItem("kos-booted", "1");
     setPhase("desk");
-    // Greet user on desktop initialization
-    requestEmote("happy", 3200, "krishna.exe [PID 1337] online!");
-  }, [requestEmote]);
+    // Greet user on desktop initialization and start periodic patrol loop
+    requestEmote("happy", 3000, "krishna.exe [PID 1337] online!");
+    startPatrol(3500);
+  }, [requestEmote, startPatrol]);
 
   const handleRestart = useCallback(() => {
     sessionStorage.removeItem("kos-booted");
